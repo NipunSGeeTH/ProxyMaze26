@@ -20,7 +20,6 @@ from __future__ import annotations
 
 import asyncio
 import copy
-import json
 import logging
 import time
 import uuid
@@ -732,3 +731,23 @@ async def get_metrics():
         }
     logger.info(f"[RESPONSE] GET /metrics | Status: 200 | Total Checks: {metrics['total_checks']} | Pool Size: {metrics['current_pool_size']} | Active Alerts: {metrics['active_alerts']}")
     return metrics
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TEST HELPER — GET /mock/{status_code}/{proxy_id}
+#
+# Returns the given HTTP status code so the test suite can use self-hosted
+# URLs that are always reachable (no dependency on httpbin.org or any
+# external service).
+#
+# Examples:
+#   GET /mock/200/px-101  →  200 OK      (proxy will be classified "up")
+#   GET /mock/500/px-bad  →  500 Error   (proxy will be classified "down")
+# ══════════════════════════════════════════════════════════════════════════════
+@app.get("/mock/{status_code}/{proxy_id}")
+async def mock_probe(status_code: int, proxy_id: str):
+    return Response(
+        content=f'{{"mock":"{proxy_id}","status":{status_code}}}',
+        status_code=status_code,
+        media_type="application/json",
+    )
