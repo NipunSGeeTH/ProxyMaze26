@@ -1,0 +1,16 @@
+venv/*
+build/
+dist/
+*.egg-info/
+__pycache__/
+*.pyc
+.DS_Store
+.idea/
+*.iml
+*.log
+*.bak
+*.tmp
+*.swp
+*.swo
+*.env   
+venv
